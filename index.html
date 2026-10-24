@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="DummyHub: shop, cook, read and plan in one single-page app.">
+  <title>DummyHub</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <!-- App shell: only structure lives here; views are drawn into #app -->
+  <header class="site-header">
+    <a class="brand" href="#/">DummyHub</a>
+    <button type="button" id="menu-toggle" class="menu-toggle" aria-controls="site-nav" aria-expanded="false">Menu</button>
+    <nav id="site-nav" class="site-nav" aria-label="Main">
+      <a href="#/" data-route="dashboard">Dashboard</a>
+      <a href="#/shop" data-route="shop">Shop</a>
+      <a href="#/recipes" data-route="recipes">Recipes</a>
+      <a href="#/community" data-route="community">Community</a>
+      <a href="#/people" data-route="people">People</a>
+      <a href="#/tasks" data-route="tasks">Tasks</a>
+      <a href="#/cart" data-route="cart">Cart <span id="cart-badge" class="badge is-empty">0</span></a>
+    </nav>
+    <div id="user-area" class="user-area"><a href="#/login">Log in</a></div>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <footer class="site-footer">
+    <p>DummyHub · data from <a href="https://dummyjson.com">DummyJSON</a></p>
+  </footer>
+</body>
+</html>
