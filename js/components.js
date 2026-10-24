@@ -8,8 +8,21 @@ export const pageHeader = (title, subtitle = '') => `
     ${subtitle ? `<p>${escapeHTML(subtitle)}</p>` : ''}
   </header>`;
 
-export const loadingBlock = (label = 'Loading…') => `
-  <p class="state-loading" role="status"><span class="spinner" aria-hidden="true"></span>${escapeHTML(label)}</p>`;
+const skeletonCard = () => `
+  <div class="card skeleton-card"><div class="skeleton skeleton-media"></div>
+    <div class="card-body"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line short"></div></div></div>`;
+const skeletonRow = () => `
+  <div class="card skeleton-row"><div class="skeleton skeleton-line"></div><div class="skeleton skeleton-line short"></div></div>`;
+
+// Placeholders shaped like the content that is coming: a card grid or a list of rows.
+const SKELETONS = {
+  grid: () => `<div class="grid" aria-hidden="true">${Array.from({ length: 6 }, skeletonCard).join('')}</div>`,
+  list: () => `<div class="stack" aria-hidden="true">${Array.from({ length: 4 }, skeletonRow).join('')}</div>`,
+};
+
+export const loadingBlock = (label = 'Loading…', variant = '') => (SKELETONS[variant]
+  ? `<div role="status" aria-busy="true"><span class="sr-only">${escapeHTML(label)}</span>${SKELETONS[variant]()}</div>`
+  : `<p class="state-loading" role="status"><span class="spinner" aria-hidden="true"></span>${escapeHTML(label)}</p>`);
 
 export const emptyBlock = (message) => `<p class="state-empty">${escapeHTML(message)}</p>`;
 
@@ -27,9 +40,9 @@ export const notFoundBlock = (title, href, linkLabel) => `
   </section>`;
 
 // The three UI states in one place: loading, error, then empty-or-success.
-export function renderByStatus(slice, { isEmpty, emptyMessage, retryAction = 'retry' }, renderSuccess) {
+export function renderByStatus(slice, { isEmpty, emptyMessage, retryAction = 'retry', skeleton = '' }, renderSuccess) {
   const { status, error } = slice;
-  if (status === 'loading') return loadingBlock();
+  if (status === 'loading') return loadingBlock('Loading…', skeleton);
   if (status === 'error') return errorBlock(error, retryAction);
   if (status === 'success') return isEmpty ? emptyBlock(emptyMessage) : renderSuccess();
   return '';

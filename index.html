@@ -3,12 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="DummyHub: shop, cook, read and plan in one single-page app.">
   <title>DummyHub</title>
+  <meta name="description" content="DummyHub: shop, cook, read and plan in one single-page app built with vanilla JavaScript.">
+  <meta name="theme-color" content="#0a6c8a">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="DummyHub">
+  <meta property="og:description" content="Shop, cook, read and plan in one single-page app.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9B%8D%EF%B8%8F%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://dummyjson.com">
+  <link rel="preconnect" href="https://cdn.dummyjson.com">
   <link rel="stylesheet" href="css/styles.css">
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
+  <!-- Hash links would trigger the router, so "skip to content" is a button that moves focus. -->
+  <button type="button" id="skip-link" class="skip-link">Skip to content</button>
+
   <!-- App shell: only structure lives here; views are drawn into #app -->
   <header class="site-header">
     <a class="brand" href="#/">DummyHub</a>
@@ -25,10 +35,13 @@
     <div id="user-area" class="user-area"><a href="#/login">Log in</a></div>
   </header>
 
-  <main id="app" tabindex="-1"></main>
+  <main id="app" tabindex="-1"><noscript>DummyHub needs JavaScript to run.</noscript></main>
 
   <footer class="site-footer">
     <p>DummyHub · data from <a href="https://dummyjson.com">DummyJSON</a></p>
   </footer>
+
+  <!-- Screen readers hear the new page title here after each navigation. -->
+  <div id="route-announcer" class="sr-only" role="status" aria-live="polite"></div>
 </body>
 </html>

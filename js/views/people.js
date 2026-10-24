@@ -40,7 +40,7 @@ export function render({ people }) {
         ${selectField('people-role', 'Role', ROLES, people.role)}
         ${selectField('people-sort', 'Sort by', SORTS, people.sortBy ? `${people.sortBy}-${people.order}` : '')}
       </form>
-      ${renderByStatus(people, { isEmpty: people.items.length === 0, emptyMessage: 'No people match your search.' },
+      ${renderByStatus(people, { isEmpty: people.items.length === 0, emptyMessage: 'No people match your search.', skeleton: 'grid' },
         () => `<div class="grid">${people.items.map(renderUser).join('')}</div>`)}
     </section>`;
 }

@@ -86,7 +86,7 @@ export function render({ community }) {
       <div class="chips" role="group" aria-label="Filter by tag">
         ${community.tags.slice(0, TAG_CHIPS).map((tag) => renderChip(tag, community.tag)).join('')}
       </div>
-      ${renderByStatus(community, { isEmpty: community.items.length === 0, emptyMessage: 'No posts match your search.' },
+      ${renderByStatus(community, { isEmpty: community.items.length === 0, emptyMessage: 'No posts match your search.', skeleton: 'list' },
         () => renderFeed(community))}
     </section>`;
 }

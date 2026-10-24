@@ -16,6 +16,7 @@ function updateBadge({ cart }) {
   const badge = document.getElementById('cart-badge');
   badge.textContent = String(totalQuantity);
   badge.classList.toggle('is-empty', totalQuantity === 0);
+  badge.closest('a').setAttribute('aria-label', `Cart, ${totalQuantity} ${totalQuantity === 1 ? 'item' : 'items'}`);
 }
 
 // createElement + textContent: user names never touch innerHTML.
@@ -61,6 +62,12 @@ export function initShell() {
   const toggle = document.getElementById('menu-toggle');
   toggle.addEventListener('click', () => setMenuOpen(toggle.getAttribute('aria-expanded') !== 'true'));
   window.addEventListener('hashchange', () => setMenuOpen(false));
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || toggle.getAttribute('aria-expanded') !== 'true') return;
+    setMenuOpen(false);
+    toggle.focus();
+  });
+  document.getElementById('skip-link').addEventListener('click', () => document.getElementById('app').focus());
   // One delegated listener: the user area is rebuilt on every state change.
   document.getElementById('user-area').addEventListener('click', (event) => {
     if (event.target.closest('[data-action="logout"]')) logout();

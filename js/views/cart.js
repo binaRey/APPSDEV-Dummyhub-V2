@@ -97,7 +97,7 @@ export function render({ cart, checkout: checkoutState, pastCarts }) {
     <section class="past-carts" aria-labelledby="past-title">
       <h2 id="past-title">Past orders</h2>
       ${renderByStatus(pastCarts,
-        { isEmpty: pastCarts.items.length === 0, emptyMessage: 'No past orders yet.', retryAction: 'retry-carts' },
+        { isEmpty: pastCarts.items.length === 0, emptyMessage: 'No past orders yet.', retryAction: 'retry-carts', skeleton: 'list' },
         () => `<ul class="stack">${pastCarts.items.map(renderPastCart).join('')}</ul>`)}
     </section>`;
 }

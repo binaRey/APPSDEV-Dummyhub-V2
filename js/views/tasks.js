@@ -117,7 +117,7 @@ export function render({ tasks }) {
       ${tasks.actionError ? `<p class="field-error" role="alert">${escapeHTML(tasks.actionError)}</p>` : ''}
       ${renderFilters(tasks.filter)}
       <p class="card-meta" aria-live="polite">${remaining} ${remaining === 1 ? 'item' : 'items'} left</p>
-      ${renderByStatus(tasks, { isEmpty: visible.length === 0, emptyMessage },
+      ${renderByStatus(tasks, { isEmpty: visible.length === 0, emptyMessage, skeleton: 'list' },
         () => `<ul class="stack">${visible.map((task) => renderTask(task, tasks.busy.includes(task.id))).join('')}</ul>`)}
     </section>`;
 }

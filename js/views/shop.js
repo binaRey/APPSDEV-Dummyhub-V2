@@ -76,7 +76,7 @@ export function render({ shop }) {
     <section>
       ${pageHeader('Shop', 'Browse products and add them to your cart.')}
       ${renderToolbar(shop)}
-      ${renderByStatus(shop, { isEmpty: visible.length === 0, emptyMessage: 'No products match your filters.' },
+      ${renderByStatus(shop, { isEmpty: visible.length === 0, emptyMessage: 'No products match your filters.', skeleton: 'grid' },
         () => `<div class="grid">${visible.map(productCard).join('')}</div>`)}
       ${shop.status === 'success' && shop.total > 0 ? renderPagination(shop) : ''}
     </section>`;

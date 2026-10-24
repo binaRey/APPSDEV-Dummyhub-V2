@@ -17,25 +17,27 @@ import * as notFound from './views/not-found.js';
 
 // guard: 'auth' = logged in only, 'guest' = logged out only, undefined = public
 const routes = [
-  { pattern: '/login', name: 'login', view: login, guard: 'guest' },
-  { pattern: '/', name: 'dashboard', view: dashboard, guard: 'auth' },
-  { pattern: '/shop', name: 'shop', view: shop },
-  { pattern: '/shop/:id', name: 'shop', view: productDetail },
-  { pattern: '/cart', name: 'cart', view: cart, guard: 'auth' },
-  { pattern: '/recipes', name: 'recipes', view: recipes },
-  { pattern: '/recipes/:id', name: 'recipes', view: recipeDetail },
-  { pattern: '/community', name: 'community', view: community },
-  { pattern: '/community/:id', name: 'community', view: postDetail },
-  { pattern: '/people', name: 'people', view: people },
-  { pattern: '/people/:id', name: 'people', view: userProfile },
-  { pattern: '/tasks', name: 'tasks', view: tasks, guard: 'auth' },
+  { pattern: '/login', name: 'login', title: 'Log in', view: login, guard: 'guest' },
+  { pattern: '/', name: 'dashboard', title: 'Dashboard', view: dashboard, guard: 'auth' },
+  { pattern: '/shop', name: 'shop', title: 'Shop', view: shop },
+  { pattern: '/shop/:id', name: 'shop', title: 'Product', view: productDetail },
+  { pattern: '/cart', name: 'cart', title: 'Cart', view: cart, guard: 'auth' },
+  { pattern: '/recipes', name: 'recipes', title: 'Recipes', view: recipes },
+  { pattern: '/recipes/:id', name: 'recipes', title: 'Recipe', view: recipeDetail },
+  { pattern: '/community', name: 'community', title: 'Community', view: community },
+  { pattern: '/community/:id', name: 'community', title: 'Post', view: postDetail },
+  { pattern: '/people', name: 'people', title: 'People', view: people },
+  { pattern: '/people/:id', name: 'people', title: 'Profile', view: userProfile },
+  { pattern: '/tasks', name: 'tasks', title: 'Tasks', view: tasks, guard: 'auth' },
 ];
-const notFoundRoute = { name: 'not-found', view: notFound };
+const notFoundRoute = { name: 'not-found', title: 'Page not found', view: notFound };
 
 let outlet = null;
 let active = notFoundRoute;
 let activeParams = {};
 let cleanup = null; // returned by a view's mount(); removes its listeners on leave
+let lastHtml = ''; // lets draw() skip the DOM work when nothing changed for this view
+let hasNavigated = false;
 
 const toPath = (hash) => hash.replace(/^#/, '').split('?')[0] || '/';
 const segments = (path) => path.split('/').filter(Boolean);
@@ -73,14 +75,29 @@ function checkGuard(route, path) {
 
 // Draws the active view from state. Called on every setState().
 function draw() {
+  const html = active.view.render(getState(), activeParams);
+  if (html === lastHtml) return;
   // Re-rendering replaces the DOM, so remember which control had focus and restore it.
   const focused = outlet.contains(document.activeElement) ? document.activeElement : null;
   const { id, selectionStart, selectionEnd } = focused ?? {};
-  outlet.innerHTML = active.view.render(getState(), activeParams);
+  outlet.innerHTML = html;
+  lastHtml = html;
   const next = id ? document.getElementById(id) : null;
-  if (!next) return;
-  next.focus();
-  if (typeof selectionStart === 'number') next.setSelectionRange(selectionStart, selectionEnd);
+  if (next) {
+    next.focus();
+    if (typeof selectionStart === 'number') next.setSelectionRange(selectionStart, selectionEnd);
+  }
+  document.title = `${outlet.querySelector('h1')?.textContent ?? active.title} | DummyHub`;
+}
+
+// After a navigation: tell screen readers where they are and move focus to the content.
+function announceNavigation() {
+  document.getElementById('route-announcer').textContent = active.title;
+  if (hasNavigated) {
+    window.scrollTo(0, 0);
+    outlet.focus({ preventScroll: true });
+  }
+  hasNavigated = true;
 }
 
 function handleRoute() {
@@ -96,6 +113,7 @@ function handleRoute() {
   activeParams = params;
   setState({ route: { ...getState().route, name: route.name, params } }); // triggers draw()
   cleanup = route.view.mount(outlet, params) ?? null;
+  announceNavigation();
 }
 
 export function startRouter(outletElement) {

@@ -75,7 +75,7 @@ export function render({ recipes }) {
     <section>
       ${pageHeader('Recipes', 'Find something to cook.')}
       ${renderToolbar(recipes)}
-      ${renderByStatus(recipes, { isEmpty: visible.length === 0, emptyMessage: 'No recipes match your filters.' },
+      ${renderByStatus(recipes, { isEmpty: visible.length === 0, emptyMessage: 'No recipes match your filters.', skeleton: 'grid' },
         () => `<div class="grid">${visible.map(renderCard).join('')}</div>`)}
     </section>`;
 }
