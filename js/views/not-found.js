@@ -1,7 +1,5 @@
-export const render = () => `
-  <section>
-    <h1>Page not found</h1>
-    <p class="state-empty">That page does not exist. <a href="#/">Back to the Dashboard</a></p>
-  </section>`;
+import { notFoundBlock } from '../components.js';
+
+export const render = () => notFoundBlock('Page not found', '#/', 'Back to the Dashboard');
 
 export const mount = () => () => {};
